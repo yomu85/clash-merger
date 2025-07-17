@@ -1,101 +1,110 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 
-interface Todo {
-  id: number;
-  text: string;
-  completed: boolean;
-}
-
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [inputValue, setInputValue] = useState("");
+  const [selectedCards, setSelectedCards] = useState<string[]>([]);
 
-  const addTodo = () => {
-    if (inputValue.trim()) {
-      setTodos([...todos, {
-        id: Date.now(),
-        text: inputValue.trim(),
-        completed: false
-      }]);
-      setInputValue("");
-    }
-  };
+  const cardImages = [
+    "archer_queen.png",
+    "archers.png",
+    "bandit.png",
+    "barbarians.png",
+    "bomber.png",
+    "dart_goblin.png",
+    "executioner.png",
+    "giant_skeleton.png",
+    "goblin_machine.png",
+    "goblins.png",
+    "golden_knight.png",
+    "knight.png",
+    "mega_knight.png",
+    "pekka.png",
+    "prince.png",
+    "princess.png",
+    "royal-ghost.png",
+    "skeleton_king.png",
+    "spear_goblins.png",
+    "valkyrie.png",
+  ];
 
-  const toggleTodo = (id: number) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
-  };
-
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+  // 카드 선택/해제 토글
+  const toggleCard = (cardImage: string) => {
+    setSelectedCards((prev) =>
+      prev.includes(cardImage)
+        ? prev.filter((card) => card !== cardImage)
+        : [...prev, cardImage]
+    );
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">할 일 목록</h1>
-      
-      <div className="flex gap-2 mb-6">
-        <Input
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="새로운 할 일을 입력하세요"
-          onKeyPress={(e) => e.key === 'Enter' && addTodo()}
-          className="flex-1"
-        />
-        <Button onClick={addTodo}>추가</Button>
-      </div>
+    <div className="app">
+      <h1>아래 카드를 고르세요.</h1>
 
-      <div className="space-y-2">
-        {todos.map((todo) => (
-          <div
-            key={todo.id}
-            className={cn(
-              "flex items-center gap-3 p-3 rounded-md border",
-              todo.completed && "bg-gray-50"
-            )}
+      <p>선택된 카드: {selectedCards.length}개</p>
+
+      <article className="choice-card-container">
+        <div className="button-container">
+          {cardImages.map((cardImage, index) => {
+            const isSelected = selectedCards.includes(cardImage);
+
+            return (
+              <motion.div
+                key={index}
+                whileTap={{ scale: 0.95 }}
+                animate={{
+                  scale: isSelected ? 0.9 : 1,
+                  rotateZ: isSelected ? -2 : 0,
+                  opacity: isSelected ? 1 : 0.5,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20,
+                }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="clash-card-button"
+                  onClick={() => toggleCard(cardImage)}
+                >
+                  <motion.img
+                    src={`/src/assets/${cardImage}`}
+                    alt="카드"
+                    className="clash-card-image"
+                    animate={{
+                      filter: isSelected ? "brightness(1.2)" : "brightness(1)",
+                    }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </Button>
+              </motion.div>
+            );
+          })}
+        </div>
+      </article>
+
+      {/* 선택된 카드들 목록 표시 */}
+      <AnimatePresence>
+        {selectedCards.length > 0 && (
+          <motion.section
+            className="selected-cards"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            <Checkbox
-              checked={todo.completed}
-              onCheckedChange={() => toggleTodo(todo.id)}
-            />
-            <Label
-              className={cn(
-                "flex-1 cursor-pointer",
-                todo.completed && "line-through text-gray-500"
-              )}
-              onClick={() => toggleTodo(todo.id)}
-            >
-              {todo.text}
-            </Label>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => deleteTodo(todo.id)}
-              className="text-red-500 hover:text-red-700"
-            >
-              <Trash2 size={16} />
-            </Button>
-          </div>
-        ))}
-      </div>
-
-      {todos.length === 0 && (
-        <p className="text-center text-gray-500 mt-6">
-          아직 할 일이 없습니다. 새로운 할 일을 추가해보세요!
-        </p>
-      )}
-
-      <div className="mt-6 text-center text-sm text-gray-600">
-        전체: {todos.length}개 | 완료: {todos.filter(t => t.completed).length}개
-      </div>
+            <h2>선택된 카드들:</h2>
+            <div className="selected-cards-list">
+              {selectedCards.map((cardImage) => (
+                <img src={`/src/assets/${cardImage}`} alt="선택된 카드" />
+              ))}
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
