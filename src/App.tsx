@@ -8,7 +8,6 @@ import {
   XIcon,
   Heart,
   Sword,
-  User,
   Droplet,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
@@ -130,24 +129,25 @@ const App = () => {
       <div className="selected-card-container">
         {Object.entries(cardCounts).map(
           ([selectedCard, selectedCount], index) => (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Card key={index} cardImage={selectedCard} disabled={true}>
-                <Badge
-                  variant="secondary"
-                  style={{ position: "absolute", top: -8, right: -8 }}
-                >
-                  {selectedCount}
-                </Badge>
-              </Card>
+            <div key={index} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <figure style={{ display: "flex", alignItems: "center", gap: 8, flexBasis: "160px", flexGrow: 0 }}>
+                <Card cardImage={selectedCard} disabled={true}>
+                  <Badge
+                    variant="secondary"
+                    style={{ position: "absolute", top: -8, right: -8 }}
+                  >
+                    {selectedCount}
+                  </Badge>
+                </Card>
+                <figcaption>{getCardById(selectedCard)?.name}</figcaption>
+              </figure>
               <dl style={{ display: "flex", alignItems: "center", gap: 4, }}>
-                <dt style={{ marginLeft: 8}}><User /></dt>
-                <dd>{getCardById(selectedCard)?.name}</dd>
-                <dt style={{ marginLeft: 8}}><Droplet /></dt>
-                <dd>{getCardById(selectedCard)?.cost}</dd>
-                <dt style={{ marginLeft: 8}}><Heart /></dt>
-                <dd>{getCardById(selectedCard)?.hp}</dd>
-                <dt style={{ marginLeft: 8}}><Sword /></dt>
-                <dd>{getCardById(selectedCard)?.damage}</dd>
+                <dt><Droplet /></dt>
+                <dd style={{ width: "24px"}}>{getCardById(selectedCard)?.cost}</dd>
+                <dt><Heart /></dt>
+                <dd style={{ width: "48px"}}>{getCardById(selectedCard)?.hp}</dd>
+                <dt><Sword /></dt>
+                <dd style={{ width: "48px"}}>{getCardById(selectedCard)?.damage}</dd>
               </dl>
             </div>
           )
