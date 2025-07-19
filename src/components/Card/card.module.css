@@ -1,0 +1,17 @@
+.clash-card {
+  display: inline-flex;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.clash-card-button {
+  width: 50px;
+  height: auto;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
