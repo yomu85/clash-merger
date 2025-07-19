@@ -180,7 +180,9 @@ export const getTacticById = (id: string): ITacticsProps | undefined => {
 export const getCardCountForSynergy = (synergyType: string, selectedCards: Record<string, number>): number => {
   const cards = SYNERGY_CARDS[synergyType] || [];
   return cards.reduce((count, cardId) => {
-    return count + (selectedCards[cardId] || 0);
+    // 카드가 있으면 개수에 상관없이 1개로만 카운트
+    const hasCard = (selectedCards[cardId] || 0) > 0;
+    return count + (hasCard ? 1 : 0);
   }, 0);
 };
 
