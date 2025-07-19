@@ -7,7 +7,7 @@ interface ITacticsProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Tactics = ({ className, tacticsImage, ...props }: ITacticsProps) => {
   return (
     <div className={styles["clash-tactics"]} style={props.style}>
-      <img src={`/src/assets/tactics/${tacticsImage}.png`} alt="tactics" />
+      <img src={`/tactics/${tacticsImage}.png`} alt="tactics" />
     </div>
   );
 };

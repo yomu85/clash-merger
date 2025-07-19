@@ -23,7 +23,7 @@ const Card = ({
         className={styles["clash-card-button"]}
         onClick={onClick}
       >
-        <img src={`/src/assets/card/${cardImage}.png`} alt="card" />
+        <img src={`/card/${cardImage}.png`} alt="card" />
       </Button>
     </div>
   );
