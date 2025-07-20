@@ -87,7 +87,7 @@ const App = () => {
     <main className="app">
       <header className="app-header">
         <div className="header-content">
-          <h1 className="header-title">클래시 로얄 합체전술</h1>
+          <h1 className="header-title">클래시 로얄 합체 전술</h1>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <img src="/elixir.png" alt="elixir" style={{ width: "auto", height: "28px" }} />
             <span style={{ fontSize: "16px", lineHeight: "28px" }}>
