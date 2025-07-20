@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircleIcon, XIcon, Heart, Sword, Droplet, ChevronsUp, ExternalLink } from "lucide-react";
+import { AlertCircleIcon, XIcon, Heart, Sword, Droplet, ChevronsUp, RotateCcw } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { getCardById, getCardWithBoostedStats, getStatBoostLevel } from "./data/cards";
 import { getActiveSynergies } from "./data/tactics";
@@ -46,7 +46,7 @@ const App = () => {
     }
   }, [isAlert]);
 
-  function handleCardClick(cardImage: string) {
+  function addCard(cardImage: string) {
     const isCardAlreadySelected = cardCounts[cardImage] > 0;
 
     if (!isCardAlreadySelected && Object.keys(cardCounts).length >= 6) {
@@ -61,14 +61,38 @@ const App = () => {
     });
   }
 
+  function removeCard(cardImage: string) {
+    setCardCounts((prev) => {
+      if (!prev[cardImage]) return prev;
+      
+      const newCount = prev[cardImage] - 1;
+      
+      if (newCount <= 0) {
+        // 개수가 0 이하가 되면 객체에서 완전히 제거
+        const { [cardImage]: removed, ...rest } = prev;
+        return rest;
+      } else {
+        // 개수가 1 이상이면 개수만 감소
+        return { ...prev, [cardImage]: newCount };
+      }
+    });
+  }
+
   return (
     <main className="app">
       <header className="app-header">
         <div className="header-content">
           <h1 className="header-title">클래시 로얄 합체전술</h1>
-          <Button variant="outline" size="icon" onClick={() => window.open('https://arong.day/', '_blank')}>
-            <ExternalLink size={20} />
-          </Button>
+          <div className="header-buttons">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={() => setCardCounts({})}
+              title="초기화"
+            >
+              <RotateCcw size={20} />
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -109,7 +133,7 @@ const App = () => {
           <Card
             key={index}
             cardImage={cardImage}
-            onClick={() => handleCardClick(cardImage)}
+            onClick={() => addCard(cardImage)}
           />
         ))}
       </div>
@@ -140,6 +164,7 @@ const App = () => {
             <div
               key={index}
               style={{ display: "flex", alignItems: "center", gap: 8 }}
+              onClick={() => removeCard(selectedCard)}
             >
               <figure
                 style={{
