@@ -212,17 +212,36 @@ export const getStatBoostLevel = (cardCount: number): number => {
 };
 
 // HP 배율 계산
-export const getHpMultiplier = (cardCount: number): number => {
+export const getHpMultiplier = (cardId: string, cardCount: number): number => {
+  const card = getCardById(cardId);
+  if (!card) return 1;
+
   const boostLevel = getStatBoostLevel(cardCount);
-  return Math.pow(2, boostLevel);
+
+  // 1.4 배율 적용 타입들
+  const lowMultiplierTypes = ['Ace', 'Avenger', 'Noblesse', 'Undead'];
+  
+  // 카드 타입 중 하나라도 lowMultiplierTypes에 포함되면 1.4, 아니면 1.6
+  const baseMultiplier = card.type.some(type => lowMultiplierTypes.includes(type)) ? 1.8 : 2;
+
+  const rawMultiplier = Math.pow(baseMultiplier, boostLevel);
+  return Math.floor(rawMultiplier * 100) / 100;
 };
 
 // 공격력 배율 계산
-export const getDamageMultiplier = (cardCount: number): number => {
-  const boostLevel = getStatBoostLevel(cardCount);
-  const rawMultiplier = Math.pow(1.6, boostLevel);
+export const getDamageMultiplier = (cardId: string, cardCount: number): number => {
+  const card = getCardById(cardId);
+  if (!card) return 1;
   
-  // 소수점 둘째자리에서 절삭
+  const boostLevel = getStatBoostLevel(cardCount);
+  
+  // 1.4 배율 적용 타입들
+  const lowMultiplierTypes = ['Ace', 'Avenger', 'Noblesse', 'Undead'];
+  
+  // 카드 타입 중 하나라도 lowMultiplierTypes에 포함되면 1.4, 아니면 1.6
+  const baseMultiplier = card.type.some(type => lowMultiplierTypes.includes(type)) ? 1.4 : 1.6;
+  
+  const rawMultiplier = Math.pow(baseMultiplier, boostLevel);
   return Math.floor(rawMultiplier * 100) / 100;
 };
 
@@ -231,8 +250,8 @@ export const getCardWithBoostedStats = (cardId: string, cardCount: number): ICar
   const card = getCardById(cardId);
   if (!card) return undefined;
   
-  const hpMultiplier = getHpMultiplier(cardCount);
-  const damageMultiplier = getDamageMultiplier(cardCount);
+  const hpMultiplier = getHpMultiplier(cardId, cardCount);
+  const damageMultiplier = getDamageMultiplier(cardId, cardCount);
   
   return {
     ...card,
