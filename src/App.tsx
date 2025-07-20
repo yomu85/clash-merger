@@ -67,23 +67,33 @@ const App = () => {
       if (!prev[cardImage]) return prev;
       
       const newCount = prev[cardImage] - 1;
-      
+
       if (newCount <= 0) {
-        // 개수가 0 이하가 되면 객체에서 완전히 제거
-        const { [cardImage]: removed, ...rest } = prev;
+        const {[cardImage]: removed, ...rest} = prev;
         return rest;
-      } else {
-        // 개수가 1 이상이면 개수만 감소
-        return { ...prev, [cardImage]: newCount };
       }
+      return {...prev, [cardImage]: newCount };
     });
   }
+
+  const getTotalCost = (): number => {
+    return Object.entries(cardCounts).reduce((total: number, [cardId, cardCount]: [string, number]) => {
+      const card = getCardById(cardId);
+      return total + (card ? card.cost * cardCount : 0);
+    }, 0);
+  };
 
   return (
     <main className="app">
       <header className="app-header">
         <div className="header-content">
           <h1 className="header-title">클래시 로얄 합체전술</h1>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <img src="/elixir.png" alt="elixir" style={{ width: "auto", height: "28px" }} />
+            <span style={{ fontSize: "16px", lineHeight: "28px" }}>
+              : {getTotalCost()}
+            </span>
+          </div>
           <div className="header-buttons">
             <Button 
               variant="outline" 
@@ -169,11 +179,11 @@ const App = () => {
             >
               <figure
                 style={{
+                  flexShrink: 0,
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  maxWidth: "160px",
-                  minWidth: "120px",
+                  width: 124,
                   flexGrow: 0,
                 }}
               >
@@ -185,7 +195,7 @@ const App = () => {
                     {selectedCount}
                   </Badge>
                 </Card>
-                <figcaption>{getCardById(selectedCard)?.name}</figcaption>
+                <figcaption style={{ fontSize: "14px" }}>{getCardById(selectedCard)?.name}</figcaption>
               </figure>
               <div
                 style={{
@@ -205,7 +215,7 @@ const App = () => {
                   }}
                 >
                   <dt>
-                    <Droplet size={14} />
+                    <img src="/elixir.png" alt="elixir" style={{ width: "auto", height: "14px" }} />
                   </dt>
                   <dd style={{ width: "24px" }}>
                     {getCardById(selectedCard)?.cost}
