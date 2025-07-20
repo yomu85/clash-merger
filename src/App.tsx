@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircleIcon, XIcon, Heart, Sword, Droplet, ChevronsUp, RotateCcw } from "lucide-react";
+import { AlertCircleIcon, XIcon, Heart, Sword, ChevronsUp, RotateCcw } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { getCardById, getCardWithBoostedStats, getStatBoostLevel } from "./data/cards";
 import { getActiveSynergies } from "./data/tactics";
@@ -91,7 +91,25 @@ const App = () => {
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <img src="/elixir.png" alt="elixir" style={{ width: "auto", height: "28px" }} />
             <span style={{ fontSize: "16px", lineHeight: "28px" }}>
-              : {getTotalCost()}
+              :
+              <motion.span
+                key={getTotalCost()}
+                initial={{ y: -20, scale: 0.5 }}
+                animate={{ y: 0, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20,
+                }}
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "28px",
+                  display: "inline-block",
+                  marginLeft: "8px",
+                }}
+              >
+                {getTotalCost()}
+              </motion.span>
             </span>
           </div>
           <div className="header-buttons">
