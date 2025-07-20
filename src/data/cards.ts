@@ -211,16 +211,19 @@ export const getStatBoostLevel = (cardCount: number): number => {
   return 0; // 1장 (부스트 없음)
 };
 
-// HP 배율 계산 (각 레벨당 100% 증가)
+// HP 배율 계산
 export const getHpMultiplier = (cardCount: number): number => {
   const boostLevel = getStatBoostLevel(cardCount);
-  return 1 + boostLevel; // 1 + 부스트레벨 (1, 2, 3, 4배)
+  return Math.pow(2, boostLevel);
 };
 
-// 공격력 배율 계산 (각 레벨당 60% 증가)
+// 공격력 배율 계산
 export const getDamageMultiplier = (cardCount: number): number => {
   const boostLevel = getStatBoostLevel(cardCount);
-  return 1 + (boostLevel * 0.6); // 1 + (부스트레벨 * 0.6) (1, 1.6, 2.2, 2.8배)
+  const rawMultiplier = Math.pow(1.6, boostLevel);
+  
+  // 소수점 둘째자리에서 절삭
+  return Math.floor(rawMultiplier * 100) / 100;
 };
 
 // 부스트가 적용된 카드 데이터 반환
