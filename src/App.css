@@ -7,6 +7,30 @@
   gap: 24px;
 }
 
+.app-header {
+  border-bottom: 1px solid #e9ecef;
+  padding: 16px 24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  max-width: 768px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .selected-card-container {
   display: flex;
   flex-direction: column;

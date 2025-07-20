@@ -1,11 +1,12 @@
 import Card from "@/components/Card";
 import Tactics from "@/components/Tactics";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertCircleIcon, XIcon, Heart, Sword, Droplet } from "lucide-react";
+import { AlertCircleIcon, XIcon, Heart, Sword, Droplet, ChevronsUp, ExternalLink } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { getCardById } from "./data/cards";
+import { getCardById, getCardWithBoostedStats, getStatBoostLevel } from "./data/cards";
 import { getActiveSynergies } from "./data/tactics";
 import "./App.css";
 
@@ -31,19 +32,6 @@ const App = () => {
     "skeletonking",
     "speargoblin",
     "valkyrie",
-  ];
-  const tactics = [
-    "ace",
-    "assassin",
-    "avenger",
-    "brawler",
-    "clan",
-    "goblin",
-    "juggernaut",
-    "noble",
-    "ranger",
-    "thrower",
-    "undead",
   ];
 
   const [cardCounts, setCardCounts] = useState<Record<string, number>>({});
@@ -75,6 +63,15 @@ const App = () => {
 
   return (
     <main className="app">
+      <header className="app-header">
+        <div className="header-content">
+          <h1 className="header-title">클래시 로얄 합체전술</h1>
+          <Button variant="outline" size="icon" onClick={() => window.open('https://arong.day/', '_blank')}>
+            <ExternalLink size={20} />
+          </Button>
+        </div>
+      </header>
+
       <AnimatePresence>
         {isAlert && (
           <motion.div
@@ -149,7 +146,8 @@ const App = () => {
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  flexBasis: "160px",
+                  maxWidth: "160px",
+                  minWidth: "120px",
                   flexGrow: 0,
                 }}
               >
@@ -189,14 +187,20 @@ const App = () => {
                   <dt>
                     <Heart size={14} />
                   </dt>
-                  <dd style={{ width: "48px" }}>
-                    {getCardById(selectedCard)?.hp}
+                  <dd style={{ width: "48px", display: "flex", alignItems: "center", gap: "2px" }}>
+                    {getCardWithBoostedStats(selectedCard, selectedCount)?.hp}
+                    {getStatBoostLevel(selectedCount) > 0 && (
+                      <ChevronsUp size={14} color="#ef4444" />
+                    )}
                   </dd>
                   <dt>
                     <Sword size={14} />
                   </dt>
-                  <dd style={{ width: "48px" }}>
-                    {getCardById(selectedCard)?.damage}
+                  <dd style={{ width: "48px", display: "flex", alignItems: "center", gap: "2px" }}>
+                    {getCardWithBoostedStats(selectedCard, selectedCount)?.damage}
+                    {getStatBoostLevel(selectedCount) > 0 && (
+                      <ChevronsUp size={14} color="#ef4444" />
+                    )}
                   </dd>
                 </dl>
                 <div style={{ fontSize: "13px" }}>
